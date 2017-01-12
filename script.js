@@ -22,18 +22,26 @@ function createTodo(text) {
 
 function taskStatus(event){
   if (event.target.classList.contains("destroy")) {
-      event.target.closest("li").remove();
-// delete element from array
-//     todos.splice(parseInt(event.target.closest("li").id));
+    event.target.closest("li").remove();
+    todos.splice(event.target.closest("li").dataset.todoId, 1);
     updateCounter();
-  } else {
+  } else{
     event.target.closest("li").classList.toggle("completed");
-    todos.forEach(function(todo){
-      if(todo.id + "-todo" === event.target.closest("li").id) {
-        todo.isCompleted = true;
-      }
-    });
+    if (event.target.closest("li").classList.contains("completed")) {
+      todos.forEach(function (todo) {
+        if (todo.id == event.target.closest("li").dataset.todoId) {
+          todo.isCompleted = true;
+        }
+      })}
+    else{
+      todos.forEach(function (todo) {
+        if (todo.id == event.target.closest("li").dataset.todoId) {
+          todo.isCompleted = false;
+        }
+      });
+    }
   }
+
 }
 
 function renderTodos(filter) {
@@ -42,7 +50,7 @@ function renderTodos(filter) {
   function cloneEl(todo) {
     var cloned = emptyItem.cloneNode(true);
     cloned.querySelector("label").textContent = todo.text;
-    cloned.setAttribute("id", todo.id + "-todo");
+    cloned.setAttribute("data-todo-id", todo.id);
     cloned.onclick = taskStatus;
 
     if(todo.isCompleted) {
@@ -102,5 +110,11 @@ footer.onclick = function filterList(event){
   } else if (event.target.dataset.filter === "completed"){
     changeFilter()
     renderTodos("completed");
+  }
+  if (event.target.classList.contains("clear-completed")){
+    todos = todos.filter(function(todo) {
+      return !todo.isCompleted
+    });
+    renderTodos(""+event.target.dataset.filter);
   }
 }
