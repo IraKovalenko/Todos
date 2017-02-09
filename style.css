@@ -2,3 +2,11 @@
 .empty-item{
   display: none;
 }
+.todo {
+  max-height: 130px;
+  overflow: auto;
+}
+
+.todo label{
+  max-height: 100px;}
+}
