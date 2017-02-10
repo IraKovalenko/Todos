@@ -51,7 +51,7 @@ inputField.onkeyup = function addTask(event) {
 list.onclick = function taskStatus(event){
   if (event.target.classList.contains("destroy")) {
 
-    //DELETE
+//DELETE
     var request = getXMLHttpRequest();
     request.open("DELETE", endpoint + "/" + todos[event.target.closest("li").dataset.order].id, true);
     request.setRequestHeader("Content-type", "application/json");
@@ -63,6 +63,12 @@ list.onclick = function taskStatus(event){
   if (event.target.classList.contains("toggle")){
     todos[event.target.closest("li").dataset.order].completed = !todos[event.target.closest("li").dataset.order].completed;
     event.target.closest("li").classList.toggle("completed");
+// //PUT
+//     var request1 = getXMLHttpRequest();
+//     request1.open('PUT', endpoint + "/" + todos[event.target.closest("li").dataset.order].id, true);
+//     request1.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=utf-8 ");
+//     var data1 = JSON.stringify(todos[event.target.closest("li").dataset.order]);
+//     request1.send(data1);
   }
 };
 
@@ -74,7 +80,15 @@ filters.onclick = function changeFilter(event) {
 
 clear.onclick = function clearCompleted(){
   todos.forEach(function(todo) {
-    if (todo.completed) delete todos[todo.order];
+    if (todo.completed) {
+//DELETE
+      var request = getXMLHttpRequest();
+      request.open("DELETE", endpoint + "/" + todos[todo.order].id, true);
+      request.setRequestHeader("Content-type", "application/json");
+      request.send();
+
+      delete todos[todo.order];
+    }
   });
   renderTodos();
 };
