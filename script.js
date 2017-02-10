@@ -50,16 +50,10 @@ inputField.onkeyup = function addTask(event) {
 };
 list.onclick = function taskStatus(event){
   if (event.target.classList.contains("destroy")) {
-      
+
+    //DELETE
     var request = getXMLHttpRequest();
-      console.log(event.target.closest("li").id);
-      console.log(event.target.closest("li"));
-      if (event.target.closest("li").id) {
-          request.open("DELETE", endpoint + "/" + event.target.closest("li").id, true);
-      }
-      else{
-          request.open("DELETE", endpoint + "/" + event.target.closest("li").dataset.order, true);
-      }
+    request.open("DELETE", endpoint + "/" + todos[event.target.closest("li").dataset.order].id, true);
     request.setRequestHeader("Content-type", "application/json");
     request.send();
 
@@ -127,13 +121,16 @@ inputField.addEventListener("keyup",
       if (event.keyCode === 13 ) {
         var request = getXMLHttpRequest();
         request.open('POST', endpoint, true);
-        request.setRequestHeader("Content-type", "application/json ");
-        request.onerror = function () {
-            alert("error: "+ request.status);
-        };
+        request.setRequestHeader("Content-type", "application/json; charset=utf-8 ");
         for (var i=0; i<todos.length; i++){
           var data = JSON.stringify(todos[i]);
         }
         request.send(data);
+        request.onerror = function () {
+          alert("error: "+ request.status);
+        };
+        request.onloadend = function () {
+          todos[todos.length-1].id = JSON.parse(request.responseText).id;
+        };
       }
     }, false);
